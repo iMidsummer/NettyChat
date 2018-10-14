@@ -11,5 +11,11 @@
 
     <artifactId>ChatClient</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>org.charles</groupId>
+            <artifactId>ChatCommon</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>
