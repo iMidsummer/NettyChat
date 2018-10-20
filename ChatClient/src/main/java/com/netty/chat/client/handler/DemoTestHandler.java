@@ -1,5 +1,8 @@
 package com.netty.chat.client.handler;
 
+import com.netty.chat.codec.PacketCodec;
+import com.netty.chat.protocol.Request.LoginRequestPacket;
+import com.netty.chat.protocol.Response.LoginResponsePacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -9,19 +12,21 @@ import java.nio.charset.Charset;
 public class DemoTestHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        String message = "hello, this is charles";
-        byte [] bytes = message.getBytes("UTF-8");
-        ByteBuf byteBuf = ctx.alloc().buffer();
-        byteBuf.writeBytes(bytes);
+        LoginRequestPacket requestPacket = new LoginRequestPacket();
+        requestPacket.setUserName("Charles");
+        requestPacket.setPassword("123456");
 
-        ctx.channel().writeAndFlush(byteBuf);
+        ByteBuf requestBuf = ctx.alloc().buffer();
+        PacketCodec.INSTANCE.encode(requestPacket, requestBuf);
+        ctx.channel().writeAndFlush(requestBuf);
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf byteBuf = (ByteBuf) msg;
-        String message = byteBuf.toString(Charset.forName("UTF-8"));
-        System.out.println("message from server:\n" + message);
+        ByteBuf responseBuf = (ByteBuf) msg;
+        LoginResponsePacket responsePacket = (LoginResponsePacket) PacketCodec.INSTANCE.decode(responseBuf);
+        System.out.println("User ID: " + responsePacket.getUserID());
+        System.out.println("User Name: " + responsePacket.getUserName());
     }
 }
 
