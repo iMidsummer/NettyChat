@@ -7,18 +7,24 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
-import java.nio.charset.Charset;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class DemoTestHandler extends ChannelInboundHandlerAdapter {
+    private static final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(2);
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        LoginRequestPacket requestPacket = new LoginRequestPacket();
-        requestPacket.setUserName("Charles");
-        requestPacket.setPassword("123456");
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+            LoginRequestPacket requestPacket = new LoginRequestPacket();
+            requestPacket.setUserName("Charles123456Charles123456Charles123456Charles123456Charles123456Charles123456Charles123456Charles123456Charles123456Charles123456Charles123456");
+            requestPacket.setPassword("123456");
 
-        ByteBuf requestBuf = ctx.alloc().buffer();
-        PacketCodec.INSTANCE.encode(requestPacket, requestBuf);
-        ctx.channel().writeAndFlush(requestBuf);
+            ByteBuf requestBuf = ctx.alloc().buffer();
+            PacketCodec.INSTANCE.encode(requestPacket, requestBuf);
+            ctx.channel().writeAndFlush(requestBuf);
+        }, 10, 10, TimeUnit.MILLISECONDS);
     }
 
     @Override
