@@ -24,7 +24,7 @@ public class DemoTestHandler extends ChannelInboundHandlerAdapter {
             ByteBuf requestBuf = ctx.alloc().buffer();
             PacketCodec.INSTANCE.encode(requestPacket, requestBuf);
             ctx.channel().writeAndFlush(requestBuf);
-        }, 10, 10, TimeUnit.MILLISECONDS);
+        }, 1, 1, TimeUnit.MILLISECONDS);
     }
 
     @Override
