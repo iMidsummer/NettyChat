@@ -1,5 +1,6 @@
 package com.netty.chat.server.main;
 
+import com.netty.chat.handler.PacketSpliter;
 import com.netty.chat.server.handler.DemoTestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -28,6 +29,7 @@ public class ChatServer {
                         @Override
                         protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
                             System.out.println("init child handler");
+                            nioSocketChannel.pipeline().addLast(new PacketSpliter());
                             nioSocketChannel.pipeline().addLast(new DemoTestHandler());
                         }
                     });

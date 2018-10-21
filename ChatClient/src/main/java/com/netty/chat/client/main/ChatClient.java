@@ -1,6 +1,7 @@
 package com.netty.chat.client.main;
 
 import com.netty.chat.client.handler.DemoTestHandler;
+import com.netty.chat.handler.PacketSpliter;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -20,6 +21,7 @@ public class ChatClient {
                         @Override
                         protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
                             System.out.println("client connected");
+                            nioSocketChannel.pipeline().addLast(new PacketSpliter());
                             nioSocketChannel.pipeline().addLast(new DemoTestHandler());
                         }
                     });
